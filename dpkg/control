@@ -1,0 +1,7 @@
+Package: PACKAGE
+Version: DEB_VER
+Architecture: ARCH
+Maintainer: waves.tech
+Section: utils
+Priority: standard
+Description: DESCRIPTION VERSION
