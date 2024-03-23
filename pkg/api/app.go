@@ -98,6 +98,10 @@ func (a *App) TransactionsBroadcast(ctx context.Context, b []byte) (proto.Transa
 		return nil, &BadRequestError{err}
 	}
 
+	// befin ВСТАВКА КОДА с ошибкой
+
+	// end
+
 	respCh := make(chan error, 1)
 
 	select {
