@@ -81,7 +81,7 @@ func FuzzTransactionsBroadcast(data []byte) int {
 		}
 
 		if strings.Contains(err.Error(), "timeout waiting response from internal") {
-			fmt.Sprintf("Error calling TransactionsBroadcast: DOS ATTACK!!!!")
+			fmt.Printf("Error calling TransactionsBroadcast: DOS ATTACK!!!!")
 			return 1
 		}
 
