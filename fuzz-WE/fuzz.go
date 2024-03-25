@@ -76,17 +76,23 @@ func FuzzTransactionsBroadcast(data []byte) int {
 
 	// Вызов функции TransactionsBroadcast и обработка ошибок
 	if err := sharedApi.TransactionsBroadcast(w, req); err != nil {
-		// Если возникла ошибка, сообщите о ней
-		if containsStandardError(err) {
+		if containsStandardError(err) { //ошибки "unexpected end of JSON input " и "invalid character '\x01" должны игнориться
 			return -1
 		}
 
-		fE := fmt.Sprintf("Error calling TransactionsBroadcast: %v\n", err) // ToDo: ошибки "unexpected end of JSON input " и "invalid character '\x01" должны игнориться
+		if strings.Contains(err.Error(), "timeout waiting response from internal") {
+			fmt.Sprintf("Error calling TransactionsBroadcast: DOS ATTACK!!!!")
+			return 1
+		}
+
+		fE := fmt.Sprintf("Error calling TransactionsBroadcast: %v\n", err)
 		fmt.Printf(fE)
 		return 1
 	}
 	// Проверка кода статуса ответа (пример: 200 - OK)
 	if w.Code != http.StatusOK {
+		// ToDo проверить, увеличилось ли количество tx. Если да – то return 1
+
 		//t.Errorf("Expected status 200, got %d, body: %s", w.Code, w.Body)
 		sE := fmt.Sprintf("Expected status 200, got %d, body: %s", w.Code, w.Body)
 		fmt.Printf(sE)

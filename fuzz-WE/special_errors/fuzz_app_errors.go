@@ -1,8 +1,11 @@
 package special_errors
 
 import (
+	"fmt"
 	"net/http"
 )
+
+// cgo LDFLAGS : - lm
 
 /*
     #include <stdlib.h>
@@ -10,7 +13,7 @@ import (
 	#include <pthread.h>
 
 
-	# cgo LDFLAGS : - lm
+	// # cgo LDFLAGS : - lm
 
     void causeSegmentationFault() {
         int *ptr = NULL;
@@ -59,43 +62,51 @@ import (
 import "C"
 
 // Ошибка утечки памяти
-func memory_leak() {
+func Memory_leak() {
+	fmt.Sprintf("memotyLeak was founded")
 	C.memotyLeak()
 }
 
 // sermentation fault
-func error_memory_read() {
+func Sermentation_fault() {
+	fmt.Sprintf("causeSegmentationFault was founded")
 	C.causeSegmentationFault()
 }
 
 // переполнение буфера
-func buffer_overflow() {
+func Buffer_overflow() {
+	fmt.Sprintf("bufferOverflow was founded")
 	C.bufferOverflow()
 }
 
 // Неопределенное поведение
-func undefined_behavior() {
+func Undefined_behavior() {
+	fmt.Sprintf("undefinedBehavior was founded")
 	C.undefinedBehavior()
 }
 
 // Состязательные условия
-func adversarial_conditions() {
+func Adversarial_conditions() {
+	fmt.Sprintf("adversarialConditions was founded")
 	C.adversarialConditions()
 }
 
 // Некорректное использование памяти
-func incorrect_memory_usage() {
+func Incorrect_memory_usage() {
+	fmt.Sprintf("incorrectMemoryUsage was founded")
 	C.incorrectMemoryUsage()
 }
 
 // panic
-func get_panic() {
+func Get_panic() {
+	fmt.Sprintf("Panic was founded")
 	panic("Panic's founded by fuzzer!")
 }
 
 // panic or not_allowed_answer
 // ToDo check!!!
-func not_allowed_answer(w http.ResponseWriter, r *http.Request) {
+func Not_allowed_answer(w http.ResponseWriter, r *http.Request) {
+	fmt.Sprintf("not_allowed_answer was founded")
 	// В данном примере мы пытаемся получить доступ к несуществующему индексу в пустом срезе.
 	var emptySlice []int
 	_ = emptySlice[0] // Эта строка вызовет panic, потому что срез пустой и доступ к нулевому элементу не определён.

@@ -203,6 +203,8 @@ type Transaction interface {
 	// for example, negative amounts for transfers.
 	Validate(scheme Scheme) (Transaction, error)
 
+	// FuzzValidateError(scheme Scheme) (Transaction, error)
+
 	// GenerateID sets transaction ID.
 	// For most transactions ID is hash of transaction body.
 	// For Payment transactions ID is Signature.
