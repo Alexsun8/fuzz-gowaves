@@ -19,8 +19,11 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 /* Start of preamble from import "C" comments.  */
 
 
-#line 14 "main_fubc_init.go"
+#line 12 "main_bool_init.go"
+ #include <stdio.h>
+ #include <errno.h>
  #include <stdint.h>
+#include <stdbool.h>
 
 #line 1 "cgo-generated-wrapper"
 
@@ -78,7 +81,6 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-extern void LLVMFuzzerInitialize();
 extern int LLVMFuzzerTestOneInput(char* data, size_t size);
 
 #ifdef __cplusplus

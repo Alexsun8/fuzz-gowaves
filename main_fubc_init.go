@@ -4,7 +4,7 @@
 // +build ignore
 // MH_SUBSECTIONS_VIA_SYMBOLS=1
 
-package main
+package main_i
 
 import (
 	target "github.com/wavesplatform/gowaves/fuzz-WE"

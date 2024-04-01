@@ -22,7 +22,6 @@ import (
 
 	void memotyLeak(){
 		int *ptr = malloc(sizeof(int));
-    	return 0;  // Утечка памяти, так как ptr не был освобожден
 	}
 
 	void bufferOverflow(){
@@ -33,7 +32,6 @@ import (
 	void undefinedBehavior(){
 		int a = 10, b = 0;
 	    int result = a / b;  // Деление на ноль
-    	printf("Result: %d\n", result);
 	}
 
 	int balance = 0;
@@ -50,7 +48,6 @@ import (
 		pthread_create(&thread2, NULL, deposit, &amount2);
 		pthread_join(thread1, NULL);
 		pthread_join(thread2, NULL);
-		printf("Final balance: %d\n", balance);
 	}
 
 	void incorrectMemoryUsage(){
