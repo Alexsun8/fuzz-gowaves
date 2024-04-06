@@ -1,0 +1,399 @@
+openapi: 3.0.0
+info:
+  title: Go Node API
+  version: 1.0.0
+paths:
+  /go/node/healthz:
+    get:
+      summary: Check node health
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+  /go/blocks/score/at/{id}:
+    get:
+      summary: Get block score at a specific ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /go/blocks/id/{id}:
+    get:
+      summary: Get block ID at a specific height
+      parameters:
+        - name: id
+          in: path
+          description: Block height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /go/blocks/generators:
+    get:
+      summary: Get blocks generators
+      responses:
+        '200':
+          description: Successful operation
+  /go/blocks/first:
+    get:
+      summary: Get first block
+      responses:
+        '200':
+          description: Successful operation
+  /go/peers/known:
+    get:
+      summary: Get known peers
+      responses:
+        '200':
+          description: Successful operation
+  /go/peers/spawned:
+    get:
+      summary: Get spawned peers
+      responses:
+        '200':
+          description: Successful operation
+  /go/wallet/accounts:
+    get:
+      summary: Get wallet accounts
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      summary: Load wallet keys
+      responses:
+        '200':
+          description: Successful operation
+  /go/debug/snapshotStateHash/{height}:
+    get:
+      summary: Get snapshot state hash at a specific height
+      parameters:
+        - name: height
+          in: path
+          description: Height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /go/miner/info:
+    get:
+      summary: Get miner info
+      responses:
+        '200':
+          description: Successful operation
+  /go/node/processes:
+    get:
+      summary: Get node processes
+      responses:
+        '200':
+          description: Successful operation
+  /go/pool/transactions:
+    get:
+      summary: Get pool transactions
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/last:
+    get:
+      summary: Get last block
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/height:
+    get:
+      summary: Get block height
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/height/{id}:
+    get:
+      summary: Get block height by ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/at/{height}:
+    get:
+      summary: Get block at specific height
+      parameters:
+        - name: height
+          in: path
+          description: Block height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/{id}:
+    get:
+      summary: Get block by ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/headers/last:
+    get:
+      summary: Get last block headers
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/headers/at/{height}:
+    get:
+      summary: Get block headers at specific height
+      parameters:
+        - name: height
+          in: path
+          description: Block height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/headers/{id}:
+    get:
+      summary: Get block headers by ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/headers/seq/{from}/{to}:
+    get:
+      summary: Get block headers from a sequence
+      parameters:
+        - name: from
+          in: path
+          description: From sequence
+          required: true
+          schema:
+            type: integer
+        - name: to
+          in: path
+          description: To sequence
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /assets/details/{id}:
+    get:
+      summary: Get asset details by ID
+      parameters:
+        - name: id
+          in: path
+          description: Asset ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /assets/details:
+    get:
+      summary: Get asset details by IDs (GET)
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      summary: Get asset details by IDs (POST)
+      responses:
+        '200':
+          description: Successful operation
+  /addresses:
+    get:
+      summary: Get addresses
+      responses:
+        '200':
+          description: Successful operation
+  /alias/by-alias/{alias}:
+    get:
+      summary: Get address by alias
+      parameters:
+        - name: alias
+          in: path
+          description: Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /alias/by-address/{address}:
+    get:
+      summary: Get aliases by address
+      parameters:
+        - name: address
+          in: path
+          description: Address
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /transactions/unconfirmed/size:
+    get:
+      summary: Get size of unconfirmed transactions
+      responses:
+        '200':
+          description: Successful operation
+  /transactions/info/{id}:
+    get:
+      summary: Get transaction info by ID
+      parameters:
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /transactions/broadcast:
+    post:
+      summary: Broadcast transaction
+      responses:
+        '200':
+          description: Successful operation
+  /peers/all:
+    get:
+      summary: Get all peers
+      responses:
+        '200':
+          description: Successful operation
+  /peers/connected:
+    get:
+      summary: Get connected peers
+      responses:
+        '200':
+          description: Successful operation
+  /peers/suspended:
+    get:
+      summary: Get suspended peers
+      responses:
+        '200':
+          description: Successful operation
+  /peers/blacklisted:
+    get:
+      summary: Get blacklisted peers
+      responses:
+        '200':
+          description: Successful operation
+  /peers/connect:
+    post:
+      summary: Connect to a peer
+      responses:
+        '200':
+          description: Successful operation
+  /peers/clearblacklist:
+    post:
+      summary: Clear peer blacklist
+      responses:
+        '200':
+          description: Successful operation
+  /debug/stateHash/{height}:
+    get:
+      summary: Get state hash at specific height
+      parameters:
+        - name: height
+          in: path
+          description: Height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /debug/stateHash/last:
+    get:
+      summary: Get last state hash
+      responses:
+        '200':
+          description: Successful operation
+  /debug/print:
+    post:
+      summary: Print debug information
+      responses:
+        '200':
+          description: Successful operation
+  /debug/rollback:
+    post:
+      summary: Rollback to a specific height
+      responses:
+        '200':
+          description: Successful operation
+  /debug/rollback-to/{id}:
+    post:
+      summary: Rollback to a specific block ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /node/version:
+    get:
+      summary: Get node version
+      responses:
+        '200':
+          description: Successful operation
+  /node/status:
+    get:
+      summary: Get node status
+      responses:
+        '200':
+          description: Successful operation
+  /wallet/seed:
+    get:
+      summary: Get wallet seed
+      responses:
+        '200':
+          description: Successful operation
+  /eth/abi/{address}:
+    get:
+      summary: Get Ethereum DApp ABI
+      parameters:
+        - name: address
+          in: path
+          description: Ethereum address
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation

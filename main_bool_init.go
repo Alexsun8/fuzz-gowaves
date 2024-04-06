@@ -1,7 +1,7 @@
 //go:build ignore
 // +build ignore
 
-package main
+package main_i
 
 import (
 	"unsafe"
@@ -15,7 +15,7 @@ import (
 //#include <stdbool.h>
 import "C"
 
-var node_initialized = C.bool(true)
+var node_initialized C.bool = C.bool(true)
 
 //export LLVMFuzzerTestOneInput
 func LLVMFuzzerTestOneInput(data *C.char, size C.size_t) C.int {

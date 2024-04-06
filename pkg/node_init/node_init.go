@@ -208,14 +208,15 @@ type Scheduler interface {
 	Emits() []scheduler.Emit
 }
 
-type ChanMessage struct {
-	//Ctx     context.Context
-	NodeAPI *api.NodeApi
-	// Добавьте дополнительные поля, если необходимо
-}
+// type ChanMessage struct {
+// 	//Ctx     context.Context
+// 	NodeAPI *api.NodeApi
+// 	// Добавьте дополнительные поля, если необходимо
+// }
 
 // func run(ch chan<- struct{}) {
-func RunNodeInit(ch chan<- ChanMessage) {
+// func RunNodeInit(ch chan<- ChanMessage) NodeAPI* {
+func RunNodeInit() (*api.NodeApi, error) {
 	nc := new(config)
 	nc.hardcode_config() // nc.parse() => nc.hardcode_config, for deleting cmd-flags
 	logger := logging.SetupLogger(nc.logLevel,
@@ -267,8 +268,8 @@ func RunNodeInit(ch chan<- ChanMessage) {
 		}()
 	}
 
-	ctx, done := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
-	defer done()
+	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	// defer done()
 
 	if nc.metricsURL != "" && nc.metricsID != -1 {
 		err = metrics.Start(ctx, nc.metricsID, nc.metricsURL)
@@ -298,7 +299,7 @@ func RunNodeInit(ch chan<- ChanMessage) {
 		cfg, err = settings.BlockchainSettingsByTypeName(nc.blockchainType)
 		if err != nil {
 			zap.S().Errorf("Failed to get blockchain settings: %v", err)
-			return
+
 		}
 	}
 
@@ -306,13 +307,13 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	err = settings.ApplySettings(conf, FromArgs(cfg.AddressSchemeCharacter, nc), settings.FromJavaEnviron)
 	if err != nil {
 		zap.S().Errorf("Failed to apply node settings: %v", err)
-		return
+		return nil, err
 	}
 
 	err = conf.Validate()
 	if err != nil {
 		zap.S().Errorf("Failed to validate node settings: %v", err)
-		return
+		return nil, err
 	}
 
 	var wal types.EmbeddedWallet = wallet.NewEmbeddedWallet(wallet.NewLoader(nc.walletPath),
@@ -320,7 +321,7 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	if nc.walletPassword != "" {
 		if err = wal.Load([]byte(nc.walletPassword)); err != nil {
 			zap.S().Errorf("Failed to load wallet: %v", err)
-			return
+			return nil, err
 		}
 	}
 
@@ -329,20 +330,20 @@ func RunNodeInit(ch chan<- ChanMessage) {
 		path, err = common.GetStatePath()
 		if err != nil {
 			zap.S().Errorf("Failed to get state path: %v", err)
-			return
+			return nil, err
 		}
 	}
 
 	reward, err := miner.ParseReward(nc.reward)
 	if err != nil {
 		zap.S().Errorf("Failed to parse '-reward': %v", err)
-		return
+		return nil, err
 	}
 
 	ntpTime, err := getNtp(ctx, nc.disableNTP)
 	if err != nil {
 		zap.S().Errorf("Failed to get NTP time: %v", err)
-		return
+		return nil, err
 	}
 
 	params := state.DefaultStateParams()
@@ -356,25 +357,25 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	st, err := state.NewState(path, true, params, cfg)
 	if err != nil {
 		zap.S().Error("Failed to initialize node's state: %v", err)
-		return
+		return nil, err
 	}
 
 	features, err := miner.ParseVoteFeatures(nc.minerVoteFeatures)
 	if err != nil {
 		zap.S().Errorf("Failed to parse '-vote': %v", err)
-		return
+		return nil, err
 	}
 
 	features, err = miner.ValidateFeatures(st, features)
 	if err != nil {
 		zap.S().Errorf("Failed to validate features: %v", err)
-		return
+		return nil, err
 	}
 
 	// Check if we need to start serving extended API right now.
 	if err := node.MaybeEnableExtendedApi(st, ntpTime); err != nil {
 		zap.S().Errorf("Failed to enable extended API: %v", err)
-		return
+		return nil, err
 	}
 
 	async := runner.NewAsync()
@@ -386,7 +387,7 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	utxValidator, err := utxpool.NewValidator(st, ntpTime, nc.obsolescencePeriod)
 	if err != nil {
 		zap.S().Errorf("Failed to initialize UTX: %v", err)
-		return
+		return nil, err
 	}
 	utx := utxpool.New(uint64(1024*mb), utxValidator, cfg)
 	parent := peer.NewParent()
@@ -394,19 +395,19 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	nodeNonce, err := rand.Int(rand.Reader, new(big.Int).SetUint64(math.MaxInt32))
 	if err != nil {
 		zap.S().Errorf("Failed to get node's nonce: %v", err)
-		return
+		return nil, err
 	}
 	peerSpawnerImpl := peers.NewPeerSpawner(parent, conf.WavesNetwork, declAddr, nc.nodeName,
 		nodeNonce.Uint64(), proto.ProtocolVersion)
 	peerStorage, err := peersPersistentStorage.NewCBORStorage(nc.statePath, time.Now())
 	if err != nil {
 		zap.S().Errorf("Failed to open or create peers storage: %v", err)
-		return
+		return nil, err
 	}
 	if nc.dropPeers {
 		if err := peerStorage.DropStorage(); err != nil {
 			zap.S().Errorf("Failed to drop peers storage. Drop peers storage manually. Err: %v", err)
-			return
+			return nil, err
 		}
 		zap.S().Info("Successfully dropped peers storage")
 	}
@@ -437,7 +438,7 @@ func RunNodeInit(ch chan<- ChanMessage) {
 		)
 		if err != nil {
 			zap.S().Errorf("Failed to initialize miner scheduler: %v", err)
-			return
+			return nil, err
 		}
 	}
 	blockApplier := blocks_applier.NewBlocksApplier()
@@ -476,12 +477,12 @@ func RunNodeInit(ch chan<- ChanMessage) {
 			if tcpAddr.Empty() {
 				// That means that configuration parameter is invalid
 				zap.S().Errorf("Failed to parse TCPAddr from string %q", tcpAddr.String())
-				return
+				return nil, err
 			}
 			if err = peerManager.AddAddress(ctx, tcpAddr); err != nil {
 				// That means that we have problems with peers storage
 				zap.S().Errorf("Failed to add addres into know peers storage: %v", err)
-				return
+				return nil, err
 			}
 		}
 	}
@@ -489,7 +490,7 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	app, err := api.NewApp(nc.apiKey, minerScheduler, svs)
 	if err != nil {
 		zap.S().Errorf("Failed to initialize application: %v", err)
-		return
+		return nil, err
 	}
 
 	webApi := api.NewNodeApi(app, st, n)
@@ -530,20 +531,21 @@ func RunNodeInit(ch chan<- ChanMessage) {
 	}
 	<-time.After(1 * time.Second)
 	zap.S().Info("Ready for tests")
-	if ch != nil {
-		select {
-		//case ch <- struct{}{}:
-		case ch <- ChanMessage{webApi}:
-		default:
-			// no-op
-		}
-	}
-	zap.S().Info("smth went wrong!!!")
+	// if ch != nil {
+	// 	select {
+	// 	//case ch <- struct{}{}:
+	// 	case ch <- ChanMessage{webApi}:
+	// 	default:
+	// 		// no-op
+	// 	}
+	// }
+	// zap.S().Info("smth went wrong!!!")
+	return webApi, nil
 
-	<-ctx.Done()
-	zap.S().Info("User termination in progress...")
-	n.Close()
-	<-time.After(1 * time.Second)
+	// <-ctx.Done()
+	// zap.S().Info("User termination in progress...")
+	// n.Close()
+	// <-time.After(1 * time.Second)
 }
 
 func FromArgs(scheme proto.Scheme, c *config) func(s *settings.NodeSettings) error {

@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
-	"sync"
 
 	_ "github.com/dvyukov/go-fuzz/go-fuzz-dep"
 	_ "github.com/google/gofuzz"
@@ -37,21 +36,23 @@ func containsStandardError(err error) bool {
 
 func NodeInitForFuzz() bool {
 	// Запуск сервера или другие инициализации, если они нужны
-	wg := new(sync.WaitGroup)
-	defer wg.Wait()
-	wg.Add(1)
-	//ch := make(chan struct{}, 1)
-	ch := make(
-		chan node_init.ChanMessage,
-		1,
-	)
-	go func() {
-		defer wg.Done()
-		node_init.RunNodeInit(ch)
-	}()
-	msg := <-ch
+	// wg := new(sync.WaitGroup)
+	// defer wg.Wait()
+	// wg.Add(1)
+	// //ch := make(chan struct{}, 1)
+	// ch := make(
+	// 	chan node_init.ChanMessage,
+	// 	1,
+	// )
+	// go func() {
+	// 	// defer wg.Done()
+	// 	node_init.RunNodeInit(ch)
+	// }()
+	// msg := <-ch
+
 	fmt.Sprintln("tests's started")
-	sharedApi = msg.NodeAPI
+
+	sharedApi, _ = node_init.RunNodeInit()
 	return true
 }
 

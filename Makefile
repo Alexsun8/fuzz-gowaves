@@ -133,7 +133,7 @@ dist-node: release-node build-node-mainnet-amd64-deb-package build-node-testnet-
 build-importer-native:
 	@go build -o build/bin/native/importer -ldflags="-X 'github.com/wavesplatform/gowaves/pkg/versioning.Version=$(VERSION)'" ./cmd/importer
 build-importer-linux:
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o build/bin/linux-amd64/importer -ldflags="-X 'github.com/wavesplatform/gowaves/pkg/versioning.Version=$(VERSION)'" ./cmd/importer
+	@CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o build/bin/linux-arm64/importer -ldflags="-X 'github.com/wavesplatform/gowaves/pkg/versioning.Version=$(VERSION)'" ./cmd/importer
 build-importer-darwin:
 	@CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o build/bin/darwin-amd64/importer -ldflags="-X 'github.com/wavesplatform/gowaves/pkg/versioning.Version=$(VERSION)'" ./cmd/importer
 build-importer-windows:
