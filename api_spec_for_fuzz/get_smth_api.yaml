@@ -1,0 +1,190 @@
+openapi: 3.0.0
+info:
+  title: Go Node API
+  version: 1.0.0
+paths:
+  /go/blocks/score/at/{id}:
+    get:
+      summary: Get block score at a specific ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /go/blocks/id/{id}:
+    get:
+      summary: Get block ID at a specific height
+      parameters:
+        - name: id
+          in: path
+          description: Block height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /go/wallet/accounts:
+    get:
+      summary: Get wallet accounts
+      responses:
+        '200':
+          description: Successful operation
+  /go/wallet/load:
+    post:
+      summary: Load wallet keys
+      responses:
+        '200':
+          description: Successful operation
+  /go/debug/snapshotStateHash/{height}:
+    get:
+      summary: Get snapshot state hash at a specific height
+      parameters:
+        - name: height
+          in: path
+          description: Height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/{id}:
+    get:
+      summary: Get block by ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/headers/at/{height}:
+    get:
+      summary: Get block headers at specific height
+      parameters:
+        - name: height
+          in: path
+          description: Block height
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /blocks/headers/{id}:
+    get:
+      summary: Get block headers by ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /assets/details/{id}:
+    get:
+      summary: Get asset details by ID
+      parameters:
+        - name: id
+          in: path
+          description: Asset ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+  /assets/details:
+    post:
+      summary: Get asset details by IDs (POST)
+      responses:
+        '200':
+          description: Successful operation
+  /alias/by-alias/{alias}:
+    get:
+      summary: Get address by alias
+      parameters:
+        - name: alias
+          in: path
+          description: Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /transactions/info/{id}:
+    get:
+      summary: Get transaction info by ID
+      parameters:
+        - name: id
+          in: path
+          description: Transaction ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /transactions/broadcast:
+    post:
+      summary: Broadcast transaction
+      responses:
+        '200':
+          description: Successful operation
+  /peers/connect:
+    post:
+      summary: Connect to a peer
+      responses:
+        '200':
+          description: Successful operation
+  /peers/clearblacklist:
+    post:
+      summary: Clear peer blacklist
+      responses:
+        '200':
+          description: Successful operation
+  /debug/rollback-to/{id}:
+    post:
+      summary: Rollback to a specific block ID
+      parameters:
+        - name: id
+          in: path
+          description: Block ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /wallet/seed:
+    get:
+      summary: Get wallet seed
+      responses:
+        '200':
+          description: Successful operation
+  /eth/abi/{address}:
+    get:
+      summary: Get Ethereum DApp ABI
+      parameters:
+        - name: address
+          in: path
+          description: Ethereum address
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
