@@ -58,6 +58,8 @@ import (
 */
 import "C"
 
+const GlobalFuzzWithErrosFlag = false
+
 // Ошибка утечки памяти
 func Memory_leak() {
 	fmt.Sprintf("memotyLeak was founded")
@@ -97,7 +99,7 @@ func Incorrect_memory_usage() {
 // panic
 func Get_panic() {
 	fmt.Sprintf("Panic was founded")
-	panic("Panic's founded by fuzzer!")
+	// panic("Panic's founded by fuzzer!")
 }
 
 // panic or not_allowed_answer

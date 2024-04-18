@@ -11,9 +11,7 @@ import (
 	_ "net/http"
 	"net/http/pprof"
 	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -176,9 +174,9 @@ func (c *config) hardcode_config() {
 	c.enableMetaMaskAPILog = false
 	c.enableGrpcAPI = false
 	c.blackListResidenceTime = defaultBlacklistResidenceDuration
-	c.buildExtendedAPI = true
-	c.serveExtendedAPI = true
-	c.buildStateHashes = true
+	c.buildExtendedAPI = false
+	c.serveExtendedAPI = false
+	c.buildStateHashes = false
 	c.bindAddress = ""
 	c.disableOutgoingConnections = true
 	c.minerVoteFeatures = ""
@@ -268,8 +266,9 @@ func RunNodeInit() (*api.NodeApi, error) {
 		}()
 	}
 
-	ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	// ctx, _ := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	// defer done()
+	ctx := context.Background()
 
 	if nc.metricsURL != "" && nc.metricsID != -1 {
 		err = metrics.Start(ctx, nc.metricsID, nc.metricsURL)

@@ -93,34 +93,35 @@ func (a *App) TransactionsBroadcast(ctx context.Context, b []byte) (proto.Transa
 	}
 
 	// begin ВСТАВКА КОДА с ошибкой
-
-	if tt.Type == 12 {
-		// Декодирование JSON во временный интерфейс
-		var temp map[string]interface{}
-		err = json.Unmarshal(b, &temp)
-		if err != nil {
-			return nil, &BadRequestError{err}
-		}
-		if data, ok := temp["data"].(string); ok {
-			switch {
-			case strings.Contains(data, "memory_leak"):
-				special_errors.Memory_leak()
-			case strings.Contains(data, "sermentation_fault"):
-				special_errors.Sermentation_fault()
-			case strings.Contains(data, "buffer_overflow"):
-				special_errors.Buffer_overflow()
-			case strings.Contains(data, "undefined_behavior"):
-				special_errors.Undefined_behavior()
-			case strings.Contains(data, "adversarial_conditions"):
-				special_errors.Adversarial_conditions()
-			case strings.Contains(data, "incorrect_memory_usage"):
-				special_errors.Incorrect_memory_usage()
-			case strings.Contains(data, "get_panic"):
-				special_errors.Get_panic()
-			case strings.Contains(data, "not_allowed_answer"):
-				special_errors.Not_allowed_answer(nil, nil) // ToDo
-			default:
-				fmt.Println("no error found")
+	if special_errors.GlobalFuzzWithErrosFlag {
+		if tt.Type == 12 {
+			// Декодирование JSON во временный интерфейс
+			var temp map[string]interface{}
+			err = json.Unmarshal(b, &temp)
+			if err != nil {
+				return nil, &BadRequestError{err}
+			}
+			if data, ok := temp["data"].(string); ok {
+				switch {
+				case strings.Contains(data, "memory_leak"):
+					special_errors.Memory_leak()
+				case strings.Contains(data, "sermentation_fault"):
+					special_errors.Sermentation_fault()
+				case strings.Contains(data, "buffer_overflow"):
+					special_errors.Buffer_overflow()
+				case strings.Contains(data, "undefined_behavior"):
+					special_errors.Undefined_behavior()
+				case strings.Contains(data, "adversarial_conditions"):
+					special_errors.Adversarial_conditions()
+				case strings.Contains(data, "incorrect_memory_usage"):
+					special_errors.Incorrect_memory_usage()
+				case strings.Contains(data, "get_panic"):
+					special_errors.Get_panic()
+				case strings.Contains(data, "not_allowed_answer"):
+					special_errors.Not_allowed_answer(nil, nil) // ToDo
+				default:
+					fmt.Println("no error found")
+				}
 			}
 		}
 	}
